@@ -1,6 +1,7 @@
 using CourseEnrollmentSystem.Data.Entities;
 using CourseEnrollmentSystem.Data.Repositories;
 using CourseEnrollmentSystem.Business.Interfaces;
+using CourseEnrollmentSystem.Business.Results;
 
 namespace CourseEnrollmentSystem.Business.Services
 {
@@ -23,33 +24,33 @@ namespace CourseEnrollmentSystem.Business.Services
             _courseService = courseService;
         }
 
-        public async Task<Enrollment> EnrollStudentAsync(int studentId, int courseId)
+        public async Task<Result> EnrollStudentAsync(int studentId, int courseId)
         {
             // Validate student exists
             var student = await _studentRepository.GetByIdAsync(studentId);
             if (student == null)
             {
-                throw new ArgumentException($"Student with ID {studentId} not found.");
+                return Result.Failure($"Student with ID {studentId} not found.");
             }
 
             // Validate course exists
             var course = await _courseRepository.GetByIdAsync(courseId);
             if (course == null)
             {
-                throw new ArgumentException($"Course with ID {courseId} not found.");
+                return Result.Failure($"Course with ID {courseId} not found.");
             }
 
             // Prevent duplicate enrollment
             if (await _enrollmentRepository.IsEnrolledAsync(studentId, courseId))
             {
-                throw new InvalidOperationException($"Student is already enrolled in this course.");
+                return Result.Failure($"Student is already enrolled in this course.");
             }
 
             // Prevent enrollment if course is full
             var availableSlots = await _courseService.GetAvailableSlotsAsync(courseId);
             if (availableSlots <= 0)
             {
-                throw new InvalidOperationException($"Course is full. No available slots.");
+                return Result.Failure($"Course is full. No available slots.");
             }
 
             // Create enrollment
@@ -62,7 +63,7 @@ namespace CourseEnrollmentSystem.Business.Services
             await _enrollmentRepository.AddAsync(enrollment);
             await _enrollmentRepository.SaveChangesAsync();
 
-            return enrollment;
+            return Result.Success();
         }
 
         public async Task<IEnumerable<Enrollment>> GetAllAsync()

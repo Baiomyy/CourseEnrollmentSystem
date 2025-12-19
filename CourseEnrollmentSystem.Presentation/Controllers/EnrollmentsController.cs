@@ -42,18 +42,14 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                var result = await _enrollmentService.EnrollStudentAsync(studentId, courseId);
+                if (!result.IsSuccess)
                 {
-                    await _enrollmentService.EnrollStudentAsync(studentId, courseId);
+                    ModelState.AddModelError("", result.ErrorMessage ?? "An error occurred.");
+                }
+                else
+                {
                     return RedirectToAction(nameof(Index));
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
                 }
             }
 

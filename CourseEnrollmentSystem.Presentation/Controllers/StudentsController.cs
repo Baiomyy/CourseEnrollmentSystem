@@ -68,14 +68,7 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _studentService.UpdateAsync(student);
-                }
-                catch (ArgumentException)
-                {
-                    return NotFound();
-                }
+                await _studentService.UpdateAsync(student);
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -103,11 +96,8 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                await _studentService.DeleteAsync(id);
-            }
-            catch (ArgumentException)
+            var result = await _studentService.DeleteAsync(id);
+            if (!result.IsSuccess)
             {
                 return NotFound();
             }

@@ -1,4 +1,5 @@
 using CourseEnrollmentSystem.Data.Entities;
+using CourseEnrollmentSystem.Business.Results;
 
 namespace CourseEnrollmentSystem.Business.Interfaces
 {
@@ -8,7 +9,7 @@ namespace CourseEnrollmentSystem.Business.Interfaces
         Task<Student?> GetByIdAsync(int id);
         Task<Student> CreateAsync(Student student);
         Task UpdateAsync(Student student);
-        Task DeleteAsync(int id);
+        Task<Result> DeleteAsync(int id);
     }
 }
 

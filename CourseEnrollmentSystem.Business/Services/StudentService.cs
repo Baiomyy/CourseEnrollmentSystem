@@ -1,6 +1,7 @@
 using CourseEnrollmentSystem.Data.Entities;
 using CourseEnrollmentSystem.Data.Repositories;
 using CourseEnrollmentSystem.Business.Interfaces;
+using CourseEnrollmentSystem.Business.Results;
 
 namespace CourseEnrollmentSystem.Business.Services
 {
@@ -39,16 +40,17 @@ namespace CourseEnrollmentSystem.Business.Services
             await _studentRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(int id)
         {
             var student = await _studentRepository.GetByIdAsync(id);
             if (student == null)
             {
-                throw new ArgumentException($"Student with ID {id} not found.");
+                return Result.Failure($"Student with ID {id} not found.");
             }
                 
             await _studentRepository.DeleteAsync(student);
             await _studentRepository.SaveChangesAsync();
+            return Result.Success();
         }
     }
 }
