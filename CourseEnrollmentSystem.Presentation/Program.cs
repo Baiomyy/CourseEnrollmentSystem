@@ -1,4 +1,7 @@
 using CourseEnrollmentSystem.Data.Extensions;
+using CourseEnrollmentSystem.Data.Contexts;
+using CourseEnrollmentSystem.Data.Seed;
+using CourseEnrollmentSystem.Business.Extensions;
 
 namespace CourseEnrollmentSystem.Presentation
 {
@@ -14,7 +17,18 @@ namespace CourseEnrollmentSystem.Presentation
             // Add Data Layer Extension Method
             builder.Services.AddDataServices();
 
+            // Add Business Layer Extension Method
+            builder.Services.AddBusinessServices();
+
             var app = builder.Build();
+
+            // Seed database
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                DbInitializer.Seed(context);
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
