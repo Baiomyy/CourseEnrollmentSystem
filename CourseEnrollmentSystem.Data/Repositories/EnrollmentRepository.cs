@@ -13,16 +13,18 @@ namespace CourseEnrollmentSystem.Data.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<Enrollment>> GetAllAsync()
+        {
+            return await _context.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Course)
+                .ToListAsync();
+        }
+
         public async Task<Enrollment> AddAsync(Enrollment enrollment)
         {
             await _context.Enrollments.AddAsync(enrollment);
             return enrollment;
-        }
-
-        public Task DeleteAsync(Enrollment enrollment)
-        {
-            _context.Enrollments.Remove(enrollment);
-            return Task.CompletedTask;
         }
 
         public async Task<bool> IsEnrolledAsync(int studentId, int courseId)
