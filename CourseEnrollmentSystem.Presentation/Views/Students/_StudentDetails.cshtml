@@ -1,0 +1,21 @@
+@model Student
+
+<div class="student-details">
+    <dl class="row">
+        <dt class="col-sm-3">Full Name:</dt>
+        <dd class="col-sm-9">@Model.FullName</dd>
+        
+        <dt class="col-sm-3">Email:</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+        
+        <dt class="col-sm-3">Birthdate:</dt>
+        <dd class="col-sm-9">@Model.Birthdate.ToShortDateString()</dd>
+        
+        <dt class="col-sm-3">National ID:</dt>
+        <dd class="col-sm-9">@Model.NationalId</dd>
+        
+        <dt class="col-sm-3">Phone Number:</dt>
+        <dd class="col-sm-9">@(Model.PhoneNumber ?? "N/A")</dd>
+    </dl>
+</div>
+

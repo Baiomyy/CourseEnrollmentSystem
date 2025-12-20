@@ -1,0 +1,15 @@
+@model Course
+
+<div class="course-details">
+    <dl class="row">
+        <dt class="col-sm-3">Title:</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+        
+        <dt class="col-sm-3">Description:</dt>
+        <dd class="col-sm-9">@(Model.Description ?? "N/A")</dd>
+        
+        <dt class="col-sm-3">Maximum Capacity:</dt>
+        <dd class="col-sm-9">@Model.MaxCapacity</dd>
+    </dl>
+</div>
+
