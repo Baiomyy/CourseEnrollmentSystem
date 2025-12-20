@@ -24,20 +24,32 @@ namespace CourseEnrollmentSystem.Business.Services
             return await _studentRepository.GetByIdAsync(id);
         }
 
-        public async Task<Student> CreateAsync(Student student)
+        public async Task<Result> CreateAsync(Student student)
         {
-            // Business logic validation can be added here
-            // For now, just add and save
+            // Check if email already exists
+            var existingStudent = await _studentRepository.GetByEmailAsync(student.Email);
+            if (existingStudent != null)
+            {
+                return Result.Failure($"A student with email '{student.Email}' already exists.");
+            }
+
             var addedStudent = await _studentRepository.AddAsync(student);
             await _studentRepository.SaveChangesAsync();
-            return addedStudent;
+            return Result.Success();
         }
 
-        public async Task UpdateAsync(Student student)
+        public async Task<Result> UpdateAsync(Student student)
         {
-            // Business logic validation can be added here
+            // Check if email already exists for a different student
+            var existingStudent = await _studentRepository.GetByEmailAsync(student.Email);
+            if (existingStudent != null && existingStudent.Id != student.Id)
+            {
+                return Result.Failure($"A student with email '{student.Email}' already exists.");
+            }
+
             await _studentRepository.UpdateAsync(student);
             await _studentRepository.SaveChangesAsync();
+            return Result.Success();
         }
 
         public async Task<Result> DeleteAsync(int id)

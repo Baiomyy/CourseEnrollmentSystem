@@ -7,8 +7,8 @@ namespace CourseEnrollmentSystem.Business.Interfaces
     {
         Task<IEnumerable<Student>> GetAllAsync();
         Task<Student?> GetByIdAsync(int id);
-        Task<Student> CreateAsync(Student student);
-        Task UpdateAsync(Student student);
+        Task<Result> CreateAsync(Student student);
+        Task<Result> UpdateAsync(Student student);
         Task<Result> DeleteAsync(int id);
     }
 }

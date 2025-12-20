@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CourseEnrollmentSystem.Business.Interfaces;
 using CourseEnrollmentSystem.Data.Entities;
+using CourseEnrollmentSystem.Business.Results;
 
 namespace CourseEnrollmentSystem.Presentation.Controllers
 {
@@ -33,7 +34,12 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _studentService.CreateAsync(student);
+                var result = await _studentService.CreateAsync(student);
+                if (!result.IsSuccess)
+                {
+                    ModelState.AddModelError("Email", result.ErrorMessage ?? "An error occurred.");
+                    return View(student);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -68,7 +74,12 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
 
             if (ModelState.IsValid)
             {
-                await _studentService.UpdateAsync(student);
+                var result = await _studentService.UpdateAsync(student);
+                if (!result.IsSuccess)
+                {
+                    ModelState.AddModelError("Email", result.ErrorMessage ?? "An error occurred.");
+                    return View(student);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
