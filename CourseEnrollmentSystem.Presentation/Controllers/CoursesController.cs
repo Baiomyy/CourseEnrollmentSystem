@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CourseEnrollmentSystem.Business.Interfaces;
 using CourseEnrollmentSystem.Data.Entities;
+using CourseEnrollmentSystem.Business.Results;
 
 namespace CourseEnrollmentSystem.Presentation.Controllers
 {
@@ -14,10 +15,10 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
         }
 
         // GET: Courses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 5)
         {
-            var courses = await _courseService.GetAllAsync();
-            return View(courses);
+            var result = await _courseService.GetAllPaginatedAsync(page, pageSize);
+            return View(result);
         }
 
         // GET: Courses/Create

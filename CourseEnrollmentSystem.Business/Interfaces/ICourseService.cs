@@ -11,6 +11,7 @@ namespace CourseEnrollmentSystem.Business.Interfaces
         Task UpdateAsync(Course course);
         Task<Result> DeleteAsync(int id);
         Task<int> GetAvailableSlotsAsync(int courseId);
+        Task<PaginatedResult<Course>> GetAllPaginatedAsync(int pageNumber, int pageSize);
     }
 }
 

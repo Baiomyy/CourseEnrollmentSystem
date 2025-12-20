@@ -65,4 +65,22 @@ public class CourseService : ICourseService
         await _courseRepository.UpdateAsync(course);
         await _courseRepository.SaveChangesAsync();
     }
+
+    public async Task<PaginatedResult<Course>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+    {
+        // Validate page parameters
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize < 1) pageSize = 10;
+
+        var totalCount = await _courseRepository.GetCountAsync();
+        var courses = await _courseRepository.GetPaginatedAsync(pageNumber, pageSize);
+
+        return new PaginatedResult<Course>
+        {
+            Items = courses,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
 }

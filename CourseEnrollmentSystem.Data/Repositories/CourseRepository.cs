@@ -41,6 +41,19 @@ namespace CourseEnrollmentSystem.Data.Repositories
             return Task.CompletedTask;
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Courses.CountAsync();
+        }
+
+        public async Task<IEnumerable<Course>> GetPaginatedAsync(int pageNumber, int pageSize)
+        {
+            return await _context.Courses
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
