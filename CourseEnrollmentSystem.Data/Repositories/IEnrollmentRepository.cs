@@ -8,6 +8,7 @@ namespace CourseEnrollmentSystem.Data.Repositories
         Task<Enrollment> AddAsync(Enrollment enrollment);
         Task<bool> IsEnrolledAsync(int studentId, int courseId);
         Task<int> GetEnrollmentCountAsync(int courseId);
+        Task DeleteByStudentIdAsync(int studentId);
         Task<int> SaveChangesAsync();
     }
 }

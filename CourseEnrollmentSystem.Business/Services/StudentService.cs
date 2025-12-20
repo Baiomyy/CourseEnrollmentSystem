@@ -8,10 +8,14 @@ namespace CourseEnrollmentSystem.Business.Services
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IEnrollmentRepository _enrollmentRepository;
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(
+            IStudentRepository studentRepository,
+            IEnrollmentRepository enrollmentRepository)
         {
             _studentRepository = studentRepository;
+            _enrollmentRepository = enrollmentRepository;
         }
 
         public async Task<IEnumerable<Student>> GetAllAsync()
@@ -59,8 +63,14 @@ namespace CourseEnrollmentSystem.Business.Services
             {
                 return Result.Failure($"Student with ID {id} not found.");
             }
-                
+            
+            // Manually delete enrollments (since In-Memory DB doesn't cascade)
+            await _enrollmentRepository.DeleteByStudentIdAsync(id);
+            
+            // Delete student
             await _studentRepository.DeleteAsync(student);
+            
+            // Single SaveChanges - commits all changes atomically
             await _studentRepository.SaveChangesAsync();
             return Result.Success();
         }

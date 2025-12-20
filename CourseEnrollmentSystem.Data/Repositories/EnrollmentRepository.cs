@@ -39,6 +39,15 @@ namespace CourseEnrollmentSystem.Data.Repositories
                 .CountAsync(e => e.CourseId == courseId);
         }
 
+        public async Task DeleteByStudentIdAsync(int studentId)
+        {
+            var enrollments = await _context.Enrollments
+                .Where(e => e.StudentId == studentId)
+                .ToListAsync();
+            
+            _context.Enrollments.RemoveRange(enrollments);
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
