@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using CourseEnrollmentSystem.Business.Interfaces;
 using CourseEnrollmentSystem.Data.Entities;
+using CourseEnrollmentSystem.Presentation.ViewModels;
+using CourseEnrollmentSystem.Presentation.Mappings;
+using CourseEnrollmentSystem.Business.Results;
 
 namespace CourseEnrollmentSystem.Presentation.Controllers
 {
@@ -30,32 +33,37 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
         // GET: Enrollments/Create
         public async Task<IActionResult> Create()
         {
-            ViewBag.Students = await _studentService.GetAllAsync();
-            ViewBag.Courses = await _courseService.GetAllAsync();
-            return View();
+            var students = await _studentService.GetAllAsync();
+            var courses = await _courseService.GetAllAsync();
+            var viewModel = EnrollmentMapper.ToViewModel(students, courses);
+            return View(viewModel);
         }
 
         // POST: Enrollments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int studentId, int courseId)
+        public async Task<IActionResult> Create(EnrollmentCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var result = await _enrollmentService.EnrollStudentAsync(studentId, courseId);
+                var result = await _enrollmentService.EnrollStudentAsync(viewModel.StudentId, viewModel.CourseId);
                 if (!result.IsSuccess)
                 {
                     ModelState.AddModelError("", result.ErrorMessage ?? "An error occurred.");
+                    // Reload dropdowns on error
+                    var students = await _studentService.GetAllAsync();
+                    var courses = await _courseService.GetAllAsync();
+                    viewModel = EnrollmentMapper.ToViewModel(students, courses);
+                    return View(viewModel);
                 }
-                else
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Students = await _studentService.GetAllAsync();
-            ViewBag.Courses = await _courseService.GetAllAsync();
-            return View();
+            // Reload dropdowns on validation error
+            var studentsReload = await _studentService.GetAllAsync();
+            var coursesReload = await _courseService.GetAllAsync();
+            viewModel = EnrollmentMapper.ToViewModel(studentsReload, coursesReload);
+            return View(viewModel);
         }
 
         // GET: Enrollments/GetAvailableSlots

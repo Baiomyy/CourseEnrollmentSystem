@@ -1,7 +1,7 @@
+@model EnrollmentCreateViewModel
+
 @{
     ViewData["Title"] = "Create Enrollment";
-    var students = ViewBag.Students as IEnumerable<Student> ?? new List<Student>();
-    var courses = ViewBag.Courses as IEnumerable<Course> ?? new List<Course>();
 }
 
 <h1>Create Enrollment</h1>
@@ -13,27 +13,27 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="form-group mb-3">
-                <label for="studentId" class="control-label">Student</label>
-                <select name="studentId" id="studentId" class="form-select" required>
+                <label asp-for="StudentId" class="control-label"></label>
+                <select asp-for="StudentId" class="form-select">
                     <option value="">-- Select Student --</option>
-                    @foreach (var student in students)
+                    @foreach (var student in Model.Students)
                     {
                         <option value="@student.Id">@student.FullName (@student.Email)</option>
                     }
                 </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="studentId" data-valmsg-replace="true"></span>
+                <span asp-validation-for="StudentId" class="text-danger"></span>
             </div>
             
             <div class="form-group mb-3">
-                <label for="courseId" class="control-label">Course</label>
-                <select name="courseId" id="courseId" class="form-select" required>
+                <label asp-for="CourseId" class="control-label"></label>
+                <select asp-for="CourseId" class="form-select">
                     <option value="">-- Select Course --</option>
-                    @foreach (var course in courses)
+                    @foreach (var course in Model.Courses)
                     {
                         <option value="@course.Id">@course.Title</option>
                     }
                 </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="courseId" data-valmsg-replace="true"></span>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
             
             <div class="form-group mb-3">
