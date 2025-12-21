@@ -46,7 +46,7 @@ A Course Enrollment System built with ASP.NET Core MVC, Entity Framework Core, a
    ```
 
 5. **Access the application**
-   - Navigate to `https://localhost:5001` or `http://localhost:5000`
+   - Navigate to `https://localhost:7109` or `http://localhost:5200`
    - Sample data is automatically seeded on startup
 
 ## Project Structure
@@ -80,15 +80,3 @@ CourseEnrollmentSystem/
 - **Cascade Delete**: Implemented manually (In-Memory DB limitation)
 - **Capacity Validation**: Prevents reducing capacity below current enrollments
 
-## Testing
-
-Key scenarios to test:
-- Student CRUD with validation (email uniqueness, future birthdate, numeric fields)
-- Course CRUD with capacity validation
-- Enrollment creation (duplicate prevention, full course validation)
-- Dynamic available slots feature
-- Pagination functionality
-
----
-
-**Built for educational/demonstration purposes**
