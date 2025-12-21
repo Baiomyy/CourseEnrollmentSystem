@@ -14,7 +14,7 @@
             
             <div class="form-group mb-3">
                 <label asp-for="StudentId" class="control-label"></label>
-                <select asp-for="StudentId" class="form-select">
+                <select asp-for="StudentId" id="StudentId" class="form-select">
                     <option value="">-- Select Student --</option>
                     @foreach (var student in Model.Students)
                     {
@@ -26,7 +26,7 @@
             
             <div class="form-group mb-3">
                 <label asp-for="CourseId" class="control-label"></label>
-                <select asp-for="CourseId" class="form-select">
+                <select asp-for="CourseId" id="courseId" class="form-select">
                     <option value="">-- Select Course --</option>
                     @foreach (var course in Model.Courses)
                     {
@@ -54,8 +54,8 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            $('#courseId').change(function() {
-                var courseId = $(this).val();
+            // Function to load available slots for a course
+            function loadAvailableSlots(courseId) {
                 var slotsDiv = $('#availableSlots');
                 
                 if (!courseId) {
@@ -89,6 +89,39 @@
                         slotsDiv.removeClass('text-primary text-success').addClass('text-danger');
                     }
                 });
+            }
+
+            // Function to clear error messages
+            function clearErrors() {
+                // Clear validation summary (ModelOnly errors like "Student is already enrolled")
+                // The asp-validation-summary renders as a div with class "text-danger" containing ul/li
+                // Exclude #availableSlots from being cleared (it uses text-danger class for styling)
+                $('#enrollmentForm').find('div.text-danger').not('#availableSlots').first().hide().empty();
+                $('.validation-summary-errors').hide().empty();
+                $('.validation-summary').hide().empty();
+                
+                // Clear field-level validation errors
+                $('.field-validation-error').removeClass('field-validation-error').addClass('field-validation-valid');
+                $('span[data-valmsg-for]').text('');
+                $('span.text-danger').not('#availableSlots').text('');
+            }
+
+            // On page load, if a course is already selected (e.g., after form error), load its available slots
+            var selectedCourseId = $('#courseId').val();
+            if (selectedCourseId) {
+                loadAvailableSlots(selectedCourseId);
+            }
+
+            // Clear errors when student selection changes
+            $('#StudentId').change(function() {
+                clearErrors();
+            });
+
+            // Clear errors and update available slots when course selection changes
+            $('#courseId').change(function() {
+                clearErrors();
+                var courseId = $(this).val();
+                loadAvailableSlots(courseId);
             });
         });
     </script>

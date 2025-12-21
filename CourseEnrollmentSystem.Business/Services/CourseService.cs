@@ -60,10 +60,23 @@ public class CourseService : ICourseService
         return await _courseRepository.GetByIdAsync(id);
     }
 
-    public async Task UpdateAsync(Course course)
+    public async Task<Result> UpdateAsync(Course course)
     {
+        // Get current enrollment count
+        var enrollmentCount = await _enrollmentRepository.GetEnrollmentCountAsync(course.Id);
+        
+        // Validate that new capacity is not less than current enrollments
+        if (course.MaxCapacity < enrollmentCount)
+        {
+            return Result.Failure(
+                $"Cannot reduce capacity to {course.MaxCapacity}. " +
+                $"There are currently {enrollmentCount} students enrolled. " +
+                $"Capacity must be at least {enrollmentCount}.");
+        }
+        
         await _courseRepository.UpdateAsync(course);
         await _courseRepository.SaveChangesAsync();
+        return Result.Success();
     }
 
     public async Task<PaginatedResult<Course>> GetAllPaginatedAsync(int pageNumber, int pageSize)

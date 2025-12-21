@@ -8,7 +8,7 @@ namespace CourseEnrollmentSystem.Business.Interfaces
         Task<IEnumerable<Course>> GetAllAsync();
         Task<Course?> GetByIdAsync(int id);
         Task<Course> CreateAsync(Course course);
-        Task UpdateAsync(Course course);
+        Task<Result> UpdateAsync(Course course);
         Task<Result> DeleteAsync(int id);
         Task<int> GetAvailableSlotsAsync(int courseId);
         Task<PaginatedResult<Course>> GetAllPaginatedAsync(int pageNumber, int pageSize);

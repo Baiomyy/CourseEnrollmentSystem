@@ -27,7 +27,7 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.FullName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.Birthdate)</td>
+                <td>@item.Birthdate.ToShortDateString()</td>
                 <td>@Html.DisplayFor(modelItem => item.NationalId)</td>
                 <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
                 <td>

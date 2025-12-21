@@ -35,10 +35,22 @@ namespace CourseEnrollmentSystem.Data.Repositories
             return student;
         }
 
-        public Task UpdateAsync(Student student)
+        public async Task UpdateAsync(Student student)
         {
-            _context.Students.Update(student);
-            return Task.CompletedTask;
+            var existingStudent = await _context.Students.FindAsync(student.Id);
+            if (existingStudent == null)
+            {
+                throw new ArgumentException($"Student with ID {student.Id} not found.");
+            }
+
+            // Update only scalar properties (not navigation properties)
+            existingStudent.FullName = student.FullName;
+            existingStudent.Email = student.Email;
+            existingStudent.Birthdate = student.Birthdate;
+            existingStudent.NationalId = student.NationalId;
+            existingStudent.PhoneNumber = student.PhoneNumber;
+            
+            // No need to call Update() - EF Core tracks changes automatically
         }
 
         public Task DeleteAsync(Student student)

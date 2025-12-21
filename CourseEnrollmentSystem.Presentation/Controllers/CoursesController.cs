@@ -69,7 +69,12 @@ namespace CourseEnrollmentSystem.Presentation.Controllers
 
             if (ModelState.IsValid)
             {
-                await _courseService.UpdateAsync(course);
+                var result = await _courseService.UpdateAsync(course);
+                if (!result.IsSuccess)
+                {
+                    ModelState.AddModelError("MaxCapacity", result.ErrorMessage ?? "An error occurred.");
+                    return View(course);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(course);
